@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Wolves - فريق الذئاب الأسطوري</title>
+    <link rel="icon" type="image/png" href="icon_ultimate.png">
+    
+    <!-- Arabic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style_ultimate.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <section class="section login-section active" id="loginSection">
+            <div class="login-card">
+                <div class="team-logo">
+                    <img src="logo_ultimate.png" alt="FC Wolves Logo">
+                </div>
+                
+                <h1 class="team-name">FC WOLVES</h1>
+                <h2 class="team-subtitle">فريق الذئاب الأسطوري</h2>
+                <p class="team-slogan">الكوشه وطن و الوطن لا يُخان 😂💪</p>
+                
+                <div class="login-form">
+                    <input type="text" id="accessCode" class="input-field" placeholder="أدخل رمز الدخول" autocomplete="off">
+                    <button onclick="handleLogin()" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        دخول
+                    </button>
+                </div>
+                
+                <div class="login-info">
+                    <p><i class="fas fa-info-circle"></i> للحصول على رمز الدخول، تواصل مع إدارة الفريق</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Section -->
+        <section class="section player-section" id="playerSection">
+            <!-- Navigation -->
+            <div class="nav-container">
+                <div class="nav-icons">
+                    <div class="nav-icon active" onclick="showPlayerTab('team')">
+                        <i class="fas fa-users"></i>
+                        <span>الفريق</span>
+                    </div>
+                    <div class="nav-icon" onclick="showPlayerTab('posts')">
+                        <i class="fas fa-newspaper"></i>
+                        <span>المنشورات</span>
+                    </div>
+                    <div class="nav-icon" onclick="showPlayerTab('chat')">
+                        <i class="fas fa-comments"></i>
+                        <span>الدردشة</span>
+                    </div>
+                    <div class="nav-icon" onclick="showPlayerTab('profile')">
+                        <i class="fas fa-user"></i>
+                        <span>الملف الشخصي</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Team Tab -->
+                <div class="tab-pane active" id="teamTab">
+                    <div class="section-header">
+                        <h2><i class="fas fa-shield-alt"></i> فريق FC Wolves الأسطوري</h2>
+                        <p>تشكيلة الذئاب المحاربين</p>
+                    </div>
+
+                    <!-- Match Info -->
+                    <div class="match-info-card">
+                        <div class="match-status">
+                            <div class="status-indicator active"></div>
+                            <span>المباراة القادمة</span>
+                        </div>
+                        <div class="match-details">
+                            <h3>FC Wolves vs الفريق المنافس</h3>
+                            <p><i class="fas fa-calendar"></i> الجمعة، 20 ديسمبر 2024</p>
+                            <p><i class="fas fa-clock"></i> 7:00 مساءً</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ملعب الكوشة الرئيسي</p>
+                        </div>
+                    </div>
+
+                    <!-- Players Grid -->
+                    <div class="players-grid" id="playersGrid">
+                        <!-- Players will be loaded here -->
+                    </div>
+
+                    <!-- Formation -->
+                    <div class="formation-section">
+                        <h3><i class="fas fa-chess-board"></i> التشكيلة الأساسية</h3>
+                        <div class="field-diagram">
+                            <div class="field-lines" id="fieldFormation">
+                                <!-- Formation will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Tab -->
+                <div class="tab-pane" id="postsTab">
+                    <div class="section-header">
+                        <h2><i class="fas fa-newspaper"></i> منشورات الفريق</h2>
+                        <p>آخر أخبار وتحديثات فريق الذئاب</p>
+                    </div>
+
+                    <!-- Create Post -->
+                    <div class="create-post-card">
+                        <div class="post-input-header">
+                            <img src="https://via.placeholder.com/50" alt="أنت" class="user-avatar" id="userAvatarPost">
+                            <div class="post-input-container">
+                                <textarea id="postContent" placeholder="شارك شيئاً مع الفريق..." class="post-input"></textarea>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <label for="postImage" class="post-action-btn">
+                                <i class="fas fa-image"></i>
+                                صورة
+                            </label>
+                            <input type="file" id="postImage" accept="image/*" style="display: none;">
+                            <button onclick="createAdvancedPost()" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                نشر
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Posts Container -->
+                    <div class="posts-container" id="postsContainer">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div class="tab-pane" id="chatTab">
+                    <div class="section-header">
+                        <h2><i class="fas fa-comments"></i> دردشة الفريق</h2>
+                        <p>تواصل مع أعضاء فريق الذئاب</p>
+                    </div>
+
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <h3><i class="fas fa-users"></i> دردشة عامة - فريق FC Wolves</h3>
+                            <span class="online-count">🟢 متصل الآن</span>
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <!-- Messages will be loaded here -->
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" class="chat-input" placeholder="اكتب رسالتك..." onkeypress="handleChatKeyPress(event)">
+                            <button onclick="sendMessage()" class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div class="tab-pane" id="profileTab">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user"></i> الملف الشخصي</h2>
+                        <p>معلوماتك في فريق الذئاب</p>
+                    </div>
+
+                    <div class="profile-card" id="profileCard">
+                        <!-- Profile will be loaded here -->
+                    </div>
+
+                    <div class="profile-actions">
+                        <button onclick="logout()" class="btn btn-secondary">
+                            <i class="fas fa-sign-out-alt"></i>
+                            تسجيل الخروج
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section class="section admin-section" id="adminSection">
+            <div class="admin-header">
+                <h1 class="admin-title"><i class="fas fa-crown"></i> لوحة تحكم المدرب</h1>
+                <p>إدارة فريق FC Wolves الأسطوري</p>
+            </div>
+
+            <div class="admin-cards">
+                <!-- Add Player Card -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-user-plus"></i> إضافة لاعب جديد</h3>
+                    <form onsubmit="addPlayer(event)">
+                        <div class="form-group">
+                            <label class="form-label">اسم اللاعب</label>
+                            <input type="text" id="playerName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رمز اللاعب</label>
+                            <input type="text" id="playerCode" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">مركز اللاعب</label>
+                            <select id="playerPosition" class="form-select" required>
+                                <option value="">اختر المركز</option>
+                                <option value="حارس مرمى">حارس مرمى</option>
+                                <option value="مدافع">مدافع</option>
+                                <option value="خط وسط">خط وسط</option>
+                                <option value="مهاجم">مهاجم</option>
+                                <option value="جناح">جناح</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم القميص</label>
+                            <input type="number" id="playerNumber" class="form-input" min="1" max="99" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">صورة اللاعب</label>
+                            <input type="file" id="playerImage" class="form-input" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">وصف اللاعب</label>
+                            <textarea id="playerDescription" class="form-textarea" placeholder="وصف مختصر عن اللاعب..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            إضافة اللاعب
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Manage Players Card -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-users-cog"></i> إدارة اللاعبين</h3>
+                    <div class="players-list" id="adminPlayersList">
+                        <!-- Players list will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Send Notification Card -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-bullhorn"></i> إرسال إشعار</h3>
+                    <div class="form-group">
+                        <label class="form-label">عنوان الإشعار</label>
+                        <input type="text" id="notificationTitle" class="form-input" placeholder="عنوان الإشعار">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">محتوى الإشعار</label>
+                        <textarea id="notificationMessage" class="form-textarea" placeholder="اكتب محتوى الإشعار..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع الإشعار</label>
+                        <select id="notificationType" class="form-select">
+                            <option value="announcement">إعلان</option>
+                            <option value="match">مباراة</option>
+                            <option value="training">تدريب</option>
+                            <option value="celebration">احتفال</option>
+                        </select>
+                    </div>
+                    <button onclick="sendNotificationToAll()" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال للجميع
+                    </button>
+                </div>
+
+                <!-- Match Management Card -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-futbol"></i> إدارة المباريات</h3>
+                    <div class="form-group">
+                        <label class="form-label">الفريق المنافس</label>
+                        <input type="text" id="opponentTeam" class="form-input" placeholder="اسم الفريق المنافس">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">تاريخ المباراة</label>
+                        <input type="datetime-local" id="matchDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">مكان المباراة</label>
+                        <input type="text" id="matchLocation" class="form-input" placeholder="ملعب المباراة">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع المباراة</label>
+                        <select id="matchType" class="form-select">
+                            <option value="ودية">مباراة ودية</option>
+                            <option value="دوري رمضان">دوري رمضان</option>
+                            <option value="كوشة">بطولة الكوشة</option>
+                            <option value="كأس">كأس</option>
+                        </select>
+                    </div>
+                    <button onclick="updateMatchInfo()" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        حفظ معلومات المباراة
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <button onclick="logout()" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Initialize app
+        initializeApp();
+    </script>
+</body>
+</html>
+

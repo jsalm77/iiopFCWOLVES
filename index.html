@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Wolves - فريق الذئاب الأسطوري</title>
+    <link rel="icon" type="image/png" href="icon_ultimate.png">
+    
+    <!-- Arabic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('style_ultimate.css');
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">
+            <img src="logo_ultimate.png" alt="FC Wolves">
+        </div>
+        <div class="loading-text">جاري تحميل فريق الذئاب الأسطوري...</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Login Section -->
+        <section class="section login-section active" id="loginSection">
+            <div class="login-card">
+                <div class="team-logo">
+                    <img src="logo_ultimate.png" alt="FC Wolves Logo">
+                </div>
+                
+                <h1 class="team-name">FC WOLVES</h1>
+                <h2 class="team-subtitle">فريق الذئاب الأسطوري</h2>
+                <p class="team-slogan">الكوشه وطن و الوطن لا يُخان 😂💪</p>
+                
+                <div class="input-group">
+                    <input type="password" class="input-field" id="accessCode" placeholder="أدخل رمز الدخول الخاص بك">
+                </div>
+                
+                <button class="btn btn-primary" onclick="checkAccessCode()">
+                    <i class="fas fa-sign-in-alt"></i> دخول
+                </button>
+                
+                <div id="loginMessage"></div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard (Hidden initially) -->
+        <section class="section admin-section" id="adminSection">
+            <div class="admin-dashboard">
+                <!-- Admin Header -->
+                <div class="admin-header">
+                    <div class="admin-logo">
+                        <img src="icon.png" alt="FC Wolves">
+                        <div class="admin-info">
+                            <h2>لوحة تحكم المدرب</h2>
+                            <p>إدارة فريق الذئاب الأسطوري</p>
+                        </div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> خروج
+                    </button>
+                </div>
+
+                <!-- Admin Navigation -->
+                <div class="admin-nav">
+                    <button class="nav-btn active" onclick="showAdminTab('players')">
+                        <i class="fas fa-users"></i> إدارة اللاعبين
+                    </button>
+                    <button class="nav-btn" onclick="showAdminTab('matches')">
+                        <i class="fas fa-futbol"></i> إدارة المباريات
+                    </button>
+                    <button class="nav-btn" onclick="showAdminTab('posts')">
+                        <i class="fas fa-newspaper"></i> إدارة المنشورات
+                    </button>
+                    <button class="nav-btn" onclick="showAdminTab('notifications')">
+                        <i class="fas fa-bell"></i> الإشعارات
+                    </button>
+                </div>
+
+                <!-- Players Management Tab -->
+                <div class="admin-tab active" id="playersTab">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-users"></i> إدارة اللاعبين</h3>
+                        <button class="btn btn-primary" onclick="showAddPlayerModal()">
+                            <i class="fas fa-plus"></i> إضافة لاعب جديد
+                        </button>
+                    </div>
+                    
+                    <div class="players-grid" id="playersGrid">
+                        <!-- Players will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Matches Management Tab -->
+                <div class="admin-tab" id="matchesTab">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-futbol"></i> إدارة المباريات</h3>
+                        <button class="btn btn-primary" onclick="showAddMatchModal()">
+                            <i class="fas fa-plus"></i> إضافة مباراة جديدة
+                        </button>
+                    </div>
+                    
+                    <div class="matches-list" id="matchesList">
+                        <!-- Matches will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Posts Management Tab -->
+                <div class="admin-tab" id="postsTab">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-newspaper"></i> إدارة المنشورات</h3>
+                    </div>
+                    
+                    <div class="posts-list" id="adminPostsList">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div class="admin-tab" id="notificationsTab">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-bell"></i> إرسال إشعارات</h3>
+                    </div>
+                    
+                    <div class="notification-form">
+                        <div class="input-group">
+                            <label>عنوان الإشعار</label>
+                            <input type="text" id="notificationTitle" placeholder="مثال: مباراة مهمة غداً">
+                        </div>
+                        <div class="input-group">
+                            <label>محتوى الإشعار</label>
+                            <textarea id="notificationMessage" placeholder="اكتب رسالة الإشعار هنا..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="sendNotification()">
+                            <i class="fas fa-paper-plane"></i> إرسال إشعار لجميع اللاعبين
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Player Modal -->
+            <div class="modal" id="addPlayerModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>إضافة لاعب جديد</h3>
+                        <button class="modal-close" onclick="closeModal('addPlayerModal')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label>اسم اللاعب</label>
+                            <input type="text" id="playerName" placeholder="أدخل اسم اللاعب">
+                        </div>
+                        <div class="input-group">
+                            <label>رمز الدخول</label>
+                            <input type="text" id="playerCode" placeholder="أدخل رمز دخول اللاعب">
+                        </div>
+                        <div class="input-group">
+                            <label>مركز اللاعب</label>
+                            <select id="playerPosition">
+                                <option value="حارس مرمى">حارس مرمى</option>
+                                <option value="مدافع">مدافع</option>
+                                <option value="وسط">وسط</option>
+                                <option value="مهاجم">مهاجم</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>رقم القميص</label>
+                            <input type="number" id="playerNumber" placeholder="رقم القميص" min="1" max="99">
+                        </div>
+                        <div class="input-group">
+                            <label>صورة اللاعب (اختيارية)</label>
+                            <input type="file" id="playerImage" accept="image/*">
+                        </div>
+                        <div class="input-group">
+                            <label>وصف اللاعب</label>
+                            <textarea id="playerDescription" placeholder="وصف مختصر عن اللاعب..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('addPlayerModal')">إلغاء</button>
+                        <button class="btn btn-primary" onclick="addPlayer()">إضافة اللاعب</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Match Modal -->
+            <div class="modal" id="addMatchModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>إضافة مباراة جديدة</h3>
+                        <button class="modal-close" onclick="closeModal('addMatchModal')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label>الفريق المنافس</label>
+                            <input type="text" id="opponentTeam" placeholder="اسم الفريق المنافس">
+                        </div>
+                        <div class="input-group">
+                            <label>تاريخ المباراة</label>
+                            <input type="date" id="matchDate">
+                        </div>
+                        <div class="input-group">
+                            <label>وقت المباراة</label>
+                            <input type="time" id="matchTime">
+                        </div>
+                        <div class="input-group">
+                            <label>مكان المباراة</label>
+                            <input type="text" id="matchLocation" placeholder="اسم الملعب أو المكان">
+                        </div>
+                        <div class="input-group">
+                            <label>نوع المباراة</label>
+                            <select id="matchType">
+                                <option value="ودية">مباراة ودية</option>
+                                <option value="دوري رمضان">دوري رمضان</option>
+                                <option value="كوشة">كوشة</option>
+                                <option value="بطولة">بطولة</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('addMatchModal')">إلغاء</button>
+                        <button class="btn btn-primary" onclick="addMatch()">إضافة المباراة</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Dashboard (Hidden initially) -->
+        <section class="section player-section" id="playerSection">
+            <!-- Top Navigation Bar -->
+            <div class="top-nav" id="topNav">
+                <div class="nav-container">
+                    <div class="nav-logo">
+                        <img src="icon.png" alt="FC Wolves">
+                        <span>FC WOLVES</span>
+                    </div>
+                    <div class="nav-icons">
+                        <div class="nav-icon active" onclick="showPlayerTab('formation')" data-tab="formation">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9M19 9H14V4H5V21H19V9Z"/>
+                            </svg>
+                            <span>التشكيلة</span>
+                        </div>
+                        <div class="nav-icon" onclick="showPlayerTab('posts')" data-tab="posts">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M19 19H5V5H19V19M17 12H7V10H17V12M15 16H7V14H15V16M17 8H7V6H17V8Z"/>
+                            </svg>
+                            <span>المنشورات</span>
+                        </div>
+                        <div class="nav-icon" onclick="showPlayerTab('chat')" data-tab="chat">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12,3C17.5,3 22,6.58 22,11C22,15.42 17.5,19 12,19C10.76,19 9.57,18.82 8.47,18.5C5.55,21 2,21 2,21C4.33,18.67 4.7,17.1 4.75,16.5C3.05,15.07 2,13.13 2,11C2,6.58 6.5,3 12,3Z"/>
+                            </svg>
+                            <span>الدردشة</span>
+                        </div>
+                        <div class="nav-icon" onclick="showPlayerTab('profile')" data-tab="profile">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                            </svg>
+                            <span>الملف الشخصي</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Content Area -->
+            <div class="player-content">
+                <!-- Formation Tab -->
+                <div class="player-tab active" id="formationTab">
+                    <div class="tab-content">
+                        <div class="section-header">
+                            <h2><i class="fas fa-users"></i> تشكيلة الفريق</h2>
+                            <p>تشكيلة الذئاب الأسطورية</p>
+                        </div>
+                        
+                        <!-- Next Match Info -->
+                        <div class="next-match-card" id="nextMatchCard">
+                            <div class="match-info">
+                                <h3>المباراة القادمة</h3>
+                                <div id="nextMatchDetails">
+                                    <p>لا توجد مباراة مجدولة حالياً</p>
+                                </div>
+                            </div>
+                            <div class="countdown" id="matchCountdown"></div>
+                        </div>
+
+                        <!-- Formation Display -->
+                        <div class="formation-display">
+                            <div class="field-container">
+                                <div class="field">
+                                    <div class="field-lines">
+                                        <div class="center-circle"></div>
+                                        <div class="penalty-area penalty-area-top"></div>
+                                        <div class="penalty-area penalty-area-bottom"></div>
+                                        <div class="goal-area goal-area-top"></div>
+                                        <div class="goal-area goal-area-bottom"></div>
+                                    </div>
+                                    <div class="players-positions" id="playersPositions">
+                                        <!-- Players will be positioned here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Players List -->
+                        <div class="players-list">
+                            <h3>قائمة اللاعبين</h3>
+                            <div class="players-grid" id="playersList">
+                                <!-- Players will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Tab -->
+                <div class="player-tab" id="postsTab">
+                    <div class="tab-content">
+                        <div class="section-header">
+                            <h2><i class="fas fa-newspaper"></i> منشورات الفريق</h2>
+                            <p>آخر أخبار وتحديثات الذئاب</p>
+                        </div>
+
+                        <!-- Create Post -->
+                        <div class="create-post-card">
+                            <div class="post-input">
+                                <div class="user-avatar">
+                                    <img src="https://via.placeholder.com/50" alt="User" id="userAvatar">
+                                </div>
+                                <textarea id="postContent" placeholder="شارك أفكارك مع الفريق..."></textarea>
+                            </div>
+                            <div class="post-actions">
+                                <button class="btn btn-primary" onclick="createPost()">
+                                    <i class="fas fa-paper-plane"></i> نشر
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Posts Feed -->
+                        <div class="posts-feed" id="postsFeed">
+                            <!-- Posts will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div class="player-tab" id="chatTab">
+                    <div class="tab-content">
+                        <div class="section-header">
+                            <h2><i class="fas fa-comments"></i> دردشة الفريق</h2>
+                            <p>تواصل مع زملائك في الفريق</p>
+                        </div>
+
+                        <!-- Chat Container -->
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- Messages will be loaded here -->
+                            </div>
+                            <div class="chat-input-container">
+                                <div class="chat-input">
+                                    <input type="text" id="messageInput" placeholder="اكتب رسالتك هنا..." onkeypress="handleMessageKeyPress(event)">
+                                    <button class="send-btn" onclick="sendMessage()">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div class="player-tab" id="profileTab">
+                    <div class="tab-content">
+                        <div class="section-header">
+                            <h2><i class="fas fa-user"></i> الملف الشخصي</h2>
+                            <p>بطاقة تعريف اللاعب الأسطوري</p>
+                        </div>
+
+                        <!-- Player Profile Card -->
+                        <div class="profile-card" id="playerProfileCard">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <img src="https://via.placeholder.com/150" alt="Player" id="profileImage">
+                                    <div class="profile-badge">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="profile-info">
+                                    <h3 id="profileName">اسم اللاعب</h3>
+                                    <p id="profilePosition">المركز</p>
+                                    <div class="profile-number" id="profileNumber">#0</div>
+                                </div>
+                            </div>
+                            <div class="profile-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">رمز الدخول:</span>
+                                    <span class="detail-value" id="profileCode">****</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">تاريخ الانضمام:</span>
+                                    <span class="detail-value" id="profileJoinDate">غير محدد</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">الوصف:</span>
+                                    <span class="detail-value" id="profileDescription">لاعب موهوب في الفريق</span>
+                                </div>
+                            </div>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">0</div>
+                                    <div class="stat-label">المباريات</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">0</div>
+                                    <div class="stat-label">الأهداف</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">0</div>
+                                    <div class="stat-label">التمريرات</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        import { database, ref, get, set } from './firebase-config.js';
+
+        // Global variables
+        let currentUser = null;
+        let currentSection = 'loginSection';
+
+        // Initialize app
+        function initializeApp() {
+            createParticles();
+            hideLoadingScreen();
+            initializeDefaultData();
+        }
+
+        // Hide loading screen
+        function hideLoadingScreen() {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            currentSection = sectionId;
+        }
+
+        // Check access code
+        async function checkAccessCode() {
+            const code = document.getElementById('accessCode').value.trim();
+            const messageDiv = document.getElementById('loginMessage');
+            
+            if (!code) {
+                showMessage('يرجى إدخال رمز الدخول', 'error');
+                return;
+            }
+
+            try {
+                // Check if it's admin code
+                if (code === '0011JMFC') {
+                    currentUser = { 
+                        role: 'admin', 
+                        name: 'المدرب الأسطوري',
+                        code: code 
+                    };
+                    showMessage('مرحباً بك أيها المدرب الأسطوري!', 'success');
+                    setTimeout(() => {
+                        showSection('adminSection');
+                        loadAdminDashboard();
+                    }, 1500);
+                    return;
+                }
+
+                // Check if it's a player code in Firebase
+                const playersSnapshot = await get(ref(database, 'players'));
+                if (playersSnapshot.exists()) {
+                    const players = playersSnapshot.val();
+                    const player = Object.values(players).find(p => p.code === code);
+                    
+                    if (player) {
+                        currentUser = { 
+                            role: 'player', 
+                            ...player 
+                        };
+                        showMessage(`مرحباً بك ${player.name}!`, 'success');
+                        setTimeout(() => {
+                            showSection('playerSection');
+                            loadPlayerDashboard();
+                        }, 1500);
+                        return;
+                    }
+                }
+
+                // Invalid code
+                showMessage('رمز الدخول غير صحيح', 'error');
+                
+            } catch (error) {
+                console.error('Error checking access code:', error);
+                showMessage('حدث خطأ في الاتصال', 'error');
+            }
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.innerHTML = `<div class="${type}-message">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // Load admin dashboard
+        function loadAdminDashboard() {
+            console.log('Loading admin dashboard...');
+            loadPlayers();
+            loadMatches();
+            loadAdminPosts();
+        }
+
+        // Show admin tab
+        function showAdminTab(tabName) {
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Hide all tabs
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Load players
+        async function loadPlayers() {
+            try {
+                const playersSnapshot = await get(ref(database, 'players'));
+                const playersGrid = document.getElementById('playersGrid');
+                
+                if (playersSnapshot.exists()) {
+                    const players = playersSnapshot.val();
+                    playersGrid.innerHTML = '';
+                    
+                    Object.entries(players).forEach(([id, player]) => {
+                        const playerCard = createPlayerCard(id, player);
+                        playersGrid.appendChild(playerCard);
+                    });
+                } else {
+                    playersGrid.innerHTML = '<p style="color: var(--text-light); text-align: center; grid-column: 1/-1;">لا يوجد لاعبون مسجلون</p>';
+                }
+            } catch (error) {
+                console.error('Error loading players:', error);
+            }
+        }
+
+        // Create player card
+        function createPlayerCard(id, player) {
+            const card = document.createElement('div');
+            card.className = 'player-card';
+            card.innerHTML = `
+                <div class="player-avatar">
+                    <img src="${player.image || 'https://via.placeholder.com/150'}" alt="${player.name}">
+                </div>
+                <div class="player-name">${player.name}</div>
+                <div class="player-position">${player.position}</div>
+                <div class="player-number">رقم ${player.number}</div>
+                <div class="player-actions">
+                    <button class="btn-small btn-edit" onclick="editPlayer('${id}')">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button class="btn-small btn-delete" onclick="deletePlayer('${id}')">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Show add player modal
+        function showAddPlayerModal() {
+            document.getElementById('addPlayerModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            // Clear form fields
+            const modal = document.getElementById(modalId);
+            const inputs = modal.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                    input.value = '';
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+
+        // Add player
+        async function addPlayer() {
+            const name = document.getElementById('playerName').value.trim();
+            const code = document.getElementById('playerCode').value.trim();
+            const position = document.getElementById('playerPosition').value;
+            const number = parseInt(document.getElementById('playerNumber').value);
+            const description = document.getElementById('playerDescription').value.trim();
+            const imageFile = document.getElementById('playerImage').files[0];
+
+            if (!name || !code || !position || !number) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            try {
+                let imageUrl = 'https://via.placeholder.com/150';
+                
+                // Upload image if provided
+                if (imageFile) {
+                    const imageRef = storageRef(storage, `players/${Date.now()}_${imageFile.name}`);
+                    const snapshot = await uploadBytes(imageRef, imageFile);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                }
+
+                // Add player to database
+                const playerId = 'player_' + Date.now();
+                await set(ref(database, `players/${playerId}`), {
+                    name,
+                    code,
+                    position,
+                    number,
+                    description: description || 'لاعب موهوب في الفريق',
+                    image: imageUrl,
+                    createdAt: new Date().toISOString()
+                });
+
+                closeModal('addPlayerModal');
+                loadPlayers();
+                showMessage('تم إضافة اللاعب بنجاح!', 'success');
+                
+            } catch (error) {
+                console.error('Error adding player:', error);
+                alert('حدث خطأ في إضافة اللاعب');
+            }
+        }
+
+        // Delete player
+        async function deletePlayer(playerId) {
+            if (confirm('هل أنت متأكد من حذف هذا اللاعب؟')) {
+                try {
+                    await remove(ref(database, `players/${playerId}`));
+                    loadPlayers();
+                    showMessage('تم حذف اللاعب بنجاح!', 'success');
+                } catch (error) {
+                    console.error('Error deleting player:', error);
+                    alert('حدث خطأ في حذف اللاعب');
+                }
+            }
+        }
+
+        // Load matches
+        async function loadMatches() {
+            try {
+                const matchesSnapshot = await get(ref(database, 'matches'));
+                const matchesList = document.getElementById('matchesList');
+                
+                if (matchesSnapshot.exists()) {
+                    const matches = matchesSnapshot.val();
+                    matchesList.innerHTML = '';
+                    
+                    Object.entries(matches).forEach(([id, match]) => {
+                        const matchCard = createMatchCard(id, match);
+                        matchesList.appendChild(matchCard);
+                    });
+                } else {
+                    matchesList.innerHTML = '<p style="color: var(--text-light); text-align: center;">لا توجد مباريات مجدولة</p>';
+                }
+            } catch (error) {
+                console.error('Error loading matches:', error);
+            }
+        }
+
+        // Create match card
+        function createMatchCard(id, match) {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = `
+                <div class="match-header">
+                    <div class="match-teams">FC Wolves vs ${match.opponent}</div>
+                    <div class="match-type">${match.type}</div>
+                </div>
+                <div class="match-details">
+                    <div class="match-detail">
+                        <div class="match-detail-label">التاريخ</div>
+                        <div class="match-detail-value">${match.date}</div>
+                    </div>
+                    <div class="match-detail">
+                        <div class="match-detail-label">الوقت</div>
+                        <div class="match-detail-value">${match.time}</div>
+                    </div>
+                    <div class="match-detail">
+                        <div class="match-detail-label">المكان</div>
+                        <div class="match-detail-value">${match.location}</div>
+                    </div>
+                </div>
+                <div class="player-actions">
+                    <button class="btn-small btn-delete" onclick="deleteMatch('${id}')">
+                        <i class="fas fa-trash"></i> حذف المباراة
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Show add match modal
+        function showAddMatchModal() {
+            document.getElementById('addMatchModal').classList.add('active');
+        }
+
+        // Add match
+        async function addMatch() {
+            const opponent = document.getElementById('opponentTeam').value.trim();
+            const date = document.getElementById('matchDate').value;
+            const time = document.getElementById('matchTime').value;
+            const location = document.getElementById('matchLocation').value.trim();
+            const type = document.getElementById('matchType').value;
+
+            if (!opponent || !date || !time || !location) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+
+            try {
+                const matchId = 'match_' + Date.now();
+                await set(ref(database, `matches/${matchId}`), {
+                    opponent,
+                    date,
+                    time,
+                    location,
+                    type,
+                    createdAt: new Date().toISOString()
+                });
+
+                closeModal('addMatchModal');
+                loadMatches();
+                showMessage('تم إضافة المباراة بنجاح!', 'success');
+                
+            } catch (error) {
+                console.error('Error adding match:', error);
+                alert('حدث خطأ في إضافة المباراة');
+            }
+        }
+
+        // Delete match
+        async function deleteMatch(matchId) {
+            if (confirm('هل أنت متأكد من حذف هذه المباراة؟')) {
+                try {
+                    await remove(ref(database, `matches/${matchId}`));
+                    loadMatches();
+                    showMessage('تم حذف المباراة بنجاح!', 'success');
+                } catch (error) {
+                    console.error('Error deleting match:', error);
+                    alert('حدث خطأ في حذف المباراة');
+                }
+            }
+        }
+
+        // Load admin posts
+        async function loadAdminPosts() {
+            try {
+                const postsSnapshot = await get(ref(database, 'posts'));
+                const postsList = document.getElementById('adminPostsList');
+                
+                if (postsSnapshot.exists()) {
+                    const posts = postsSnapshot.val();
+                    postsList.innerHTML = '';
+                    
+                    Object.entries(posts).forEach(([id, post]) => {
+                        const postCard = createAdminPostCard(id, post);
+                        postsList.appendChild(postCard);
+                    });
+                } else {
+                    postsList.innerHTML = '<p style="color: var(--text-light); text-align: center;">لا توجد منشورات</p>';
+                }
+            } catch (error) {
+                console.error('Error loading posts:', error);
+            }
+        }
+
+        // Create admin post card
+        function createAdminPostCard(id, post) {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = `
+                <div class="match-header">
+                    <div class="match-teams">${post.authorName}</div>
+                    <div class="match-type">${new Date(post.timestamp).toLocaleDateString('ar')}</div>
+                </div>
+                <div style="color: var(--text-light); margin: 15px 0;">${post.content}</div>
+                <div class="player-actions">
+                    <button class="btn-small btn-delete" onclick="deletePost('${id}')">
+                        <i class="fas fa-trash"></i> حذف المنشور
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Delete post
+        async function deletePost(postId) {
+            if (confirm('هل أنت متأكد من حذف هذا المنشور؟')) {
+                try {
+                    await remove(ref(database, `posts/${postId}`));
+                    loadAdminPosts();
+                    showMessage('تم حذف المنشور بنجاح!', 'success');
+                } catch (error) {
+                    console.error('Error deleting post:', error);
+                    alert('حدث خطأ في حذف المنشور');
+                }
+            }
+        }
+
+        // Send notification
+        async function sendNotification() {
+            const title = document.getElementById('notificationTitle').value.trim();
+            const message = document.getElementById('notificationMessage').value.trim();
+
+            if (!title || !message) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+
+            try {
+                const notificationId = 'notification_' + Date.now();
+                await set(ref(database, `notifications/${notificationId}`), {
+                    title,
+                    message,
+                    timestamp: new Date().toISOString(),
+                    sender: 'المدرب الأسطوري'
+                });
+
+                document.getElementById('notificationTitle').value = '';
+                document.getElementById('notificationMessage').value = '';
+                showMessage('تم إرسال الإشعار بنجاح!', 'success');
+                
+            } catch (error) {
+                console.error('Error sending notification:', error);
+                alert('حدث خطأ في إرسال الإشعار');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                currentUser = null;
+                showSection('loginSection');
+                document.getElementById('accessCode').value = '';
+            }
+        }
+
+        // Player Dashboard Functions
+        function showPlayerTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.player-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav icons
+            document.querySelectorAll('.nav-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Add active class to selected nav icon
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Load tab content
+            switch(tabName) {
+                case 'formation':
+                    loadFormationData();
+                    break;
+                case 'posts':
+                    loadPosts();
+                    break;
+                case 'chat':
+                    loadChatMessages();
+                    break;
+                case 'profile':
+                    loadPlayerProfile();
+                    break;
+            }
+        }
+
+        // Formation Functions
+        function loadFormationData() {
+            loadNextMatch();
+            loadPlayersFormation();
+            loadPlayersList();
+        }
+
+        function loadNextMatch() {
+            const nextMatchDetails = document.getElementById('nextMatchDetails');
+            const matchCountdown = document.getElementById('matchCountdown');
+            
+            // Get next match from Firebase or localStorage
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const nextMatch = matches.find(match => new Date(match.date) > new Date());
+            
+            if (nextMatch) {
+                nextMatchDetails.innerHTML = `
+                    <div class="match-details">
+                        <p><strong>الخصم:</strong> ${nextMatch.opponent}</p>
+                        <p><strong>التاريخ:</strong> ${new Date(nextMatch.date).toLocaleDateString('ar-SA')}</p>
+                        <p><strong>الوقت:</strong> ${nextMatch.time}</p>
+                        <p><strong>المكان:</strong> ${nextMatch.venue}</p>
+                        <p><strong>نوع المباراة:</strong> ${nextMatch.type}</p>
+                    </div>
+                `;
+                
+                // Start countdown
+                startCountdown(nextMatch.date, nextMatch.time);
+            } else {
+                nextMatchDetails.innerHTML = '<p>لا توجد مباراة مجدولة حالياً</p>';
+                matchCountdown.innerHTML = '';
+            }
+        }
+
+        function startCountdown(matchDate, matchTime) {
+            const matchDateTime = new Date(`${matchDate} ${matchTime}`);
+            const countdownElement = document.getElementById('matchCountdown');
+            
+            function updateCountdown() {
+                const now = new Date();
+                const timeDiff = matchDateTime - now;
+                
+                if (timeDiff <= 0) {
+                    countdownElement.innerHTML = '<div class="countdown-item"><div class="countdown-number">انتهت</div></div>';
+                    return;
+                }
+                
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                
+                countdownElement.innerHTML = `
+                    <div class="countdown-item">
+                        <div class="countdown-number">${days}</div>
+                        <div class="countdown-label">يوم</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">${hours}</div>
+                        <div class="countdown-label">ساعة</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">${minutes}</div>
+                        <div class="countdown-label">دقيقة</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">${seconds}</div>
+                        <div class="countdown-label">ثانية</div>
+                    </div>
+                `;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        function loadPlayersFormation() {
+            const playersPositions = document.getElementById('playersPositions');
+            const players = JSON.parse(localStorage.getItem('players') || '[]');
+            const formation = localStorage.getItem('currentFormation') || '2-1-2';
+            
+            playersPositions.innerHTML = '';
+            
+            // Formation positions for 6-a-side (percentages from top-left)
+            const formations = {
+                '2-1-2': [
+                    { top: '85%', left: '50%' }, // GK
+                    { top: '65%', left: '25%' }, // LB
+                    { top: '65%', left: '75%' }, // RB
+                    { top: '45%', left: '50%' }, // CM
+                    { top: '25%', left: '35%' }, // LF
+                    { top: '25%', left: '65%' }  // RF
+                ],
+                '1-3-1': [
+                    { top: '85%', left: '50%' }, // GK
+                    { top: '65%', left: '50%' }, // CB
+                    { top: '45%', left: '25%' }, // LM
+                    { top: '45%', left: '75%' }, // RM
+                    { top: '45%', left: '50%' }, // CM
+                    { top: '25%', left: '50%' }  // ST
+                ],
+                '1-2-2': [
+                    { top: '85%', left: '50%' }, // GK
+                    { top: '65%', left: '50%' }, // CB
+                    { top: '45%', left: '35%' }, // LCM
+                    { top: '45%', left: '65%' }, // RCM
+                    { top: '25%', left: '35%' }, // LST
+                    { top: '25%', left: '65%' }  // RST
+                ]
+            };
+            
+            const positions = formations[formation] || formations['2-1-2'];
+            
+            players.slice(0, 6).forEach((player, index) => {
+                if (positions[index]) {
+                    const playerElement = document.createElement('div');
+                    playerElement.className = 'field-player';
+                    playerElement.style.top = positions[index].top;
+                    playerElement.style.left = positions[index].left;
+                    playerElement.style.transform = 'translate(-50%, -50%)';
+                    playerElement.textContent = player.number || (index + 1);
+                    playerElement.title = `${player.name} - ${player.position}`;
+                    playersPositions.appendChild(playerElement);
+                }
+            });
+        }
+
+        function loadPlayersList() {
+            const playersList = document.getElementById('playersList');
+            const players = JSON.parse(localStorage.getItem('players') || '[]');
+            
+            playersList.innerHTML = '';
+            
+            players.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerHTML = `
+                    <div class="player-avatar">
+                        <img src="${player.image || 'https://via.placeholder.com/80'}" alt="${player.name}">
+                        <div class="player-number">#${player.number || '0'}</div>
+                    </div>
+                    <h4>${player.name}</h4>
+                    <p>${player.position}</p>
+                    <div class="player-stats">
+                        <span>المباريات: ${player.matches || 0}</span>
+                        <span>الأهداف: ${player.goals || 0}</span>
+                    </div>
+                `;
+                playersList.appendChild(playerCard);
+            });
+        }
+
+        // Posts Functions
+        function loadPosts() {
+            const postsFeed = document.getElementById('postsFeed');
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            postsFeed.innerHTML = '';
+            
+            posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <div class="post-header">
+                        <div class="user-avatar">
+                            <img src="${post.authorImage || 'https://via.placeholder.com/50'}" alt="${post.author}">
+                        </div>
+                        <div class="post-info">
+                            <div class="post-author">${post.author}</div>
+                            <div class="post-time">${formatTime(post.timestamp)}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-actions">
+                        <button class="btn btn-secondary" onclick="likePost('${post.id}')">
+                            <i class="fas fa-heart"></i> ${post.likes || 0}
+                        </button>
+                        <button class="btn btn-secondary" onclick="commentPost('${post.id}')">
+                            <i class="fas fa-comment"></i> تعليق
+                        </button>
+                    </div>
+                `;
+                postsFeed.appendChild(postCard);
+            });
+        }
+
+        function createPost() {
+            const postContent = document.getElementById('postContent').value.trim();
+            if (!postContent) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            const newPost = {
+                id: Date.now().toString(),
+                author: currentUser.name || 'لاعب مجهول',
+                authorImage: currentUser.image || 'https://via.placeholder.com/50',
+                content: postContent,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                comments: []
+            };
+            
+            posts.unshift(newPost);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            
+            // Clear input
+            document.getElementById('postContent').value = '';
+            
+            // Reload posts
+            loadPosts();
+            
+            // Show success message
+            showNotification('تم نشر المنشور بنجاح!', 'success');
+        }
+
+        function likePost(postId) {
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const post = posts.find(p => p.id === postId);
+            
+            if (post) {
+                post.likes = (post.likes || 0) + 1;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadPosts();
+            }
+        }
+
+        // Chat Functions
+        function loadChatMessages() {
+            const chatMessages = document.getElementById('chatMessages');
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            chatMessages.innerHTML = '';
+            
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.className = `chat-message ${message.author === currentUser.name ? 'own' : ''}`;
+                messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="${message.authorImage || 'https://via.placeholder.com/35'}" alt="${message.author}">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-author">${message.author}</div>
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">${formatTime(message.timestamp)}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageElement);
+            });
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            
+            const newMessage = {
+                id: Date.now().toString(),
+                author: currentUser.name || 'لاعب مجهول',
+                authorImage: currentUser.image || 'https://via.placeholder.com/35',
+                text: messageText,
+                timestamp: new Date().toISOString()
+            };
+            
+            messages.push(newMessage);
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Reload messages
+            loadChatMessages();
+        }
+
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Profile Functions
+        function loadPlayerProfile() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            document.getElementById('profileImage').src = currentUser.image || 'https://via.placeholder.com/150';
+            document.getElementById('profileName').textContent = currentUser.name || 'اسم اللاعب';
+            document.getElementById('profilePosition').textContent = currentUser.position || 'المركز';
+            document.getElementById('profileNumber').textContent = `#${currentUser.number || '0'}`;
+            document.getElementById('profileCode').textContent = currentUser.code || '****';
+            document.getElementById('profileJoinDate').textContent = currentUser.joinDate || 'غير محدد';
+            document.getElementById('profileDescription').textContent = currentUser.description || 'لاعب موهوب في الفريق';
+        }
+
+        // Utility Functions
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'الآن';
+            if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+            if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+            if (diffDays < 7) return `منذ ${diffDays} يوم`;
+            
+            return date.toLocaleDateString('ar-SA');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--gradient-primary);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: var(--shadow-glow);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Navigation scroll behavior
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const topNav = document.getElementById('topNav');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                topNav.classList.add('hidden');
+            } else {
+                // Scrolling up
+                topNav.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // Initialize Firebase and load data
+        function initializeFirebase() {
+            try {
+                // Initialize Firebase with the configuration
+                firebase.initializeApp(firebaseConfig);
+                
+                // Get Firebase services
+                window.db = firebase.database();
+                window.storage = firebase.storage();
+                window.messaging = firebase.messaging();
+                
+                console.log('Firebase initialized successfully');
+                
+                // Initialize notifications
+                initializeNotifications();
+                
+                // Load initial data
+                loadInitialData();
+                
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                // Fallback to localStorage
+                console.log('Using localStorage as fallback');
+            }
+        }
+
+        // Initialize push notifications
+        function initializeNotifications() {
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered:', registration);
+                        
+                        // Request notification permission
+                        return Notification.requestPermission();
+                    })
+                    .then(function(permission) {
+                        if (permission === 'granted') {
+                            console.log('Notification permission granted');
+                            
+                            // Get FCM token
+                            if (window.messaging) {
+                                return messaging.getToken();
+                            }
+                        } else {
+                            console.log('Notification permission denied');
+                        }
+                    })
+                    .then(function(token) {
+                        if (token) {
+                            console.log('FCM Token:', token);
+                            // Store token for sending notifications
+                            localStorage.setItem('fcmToken', token);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error initializing notifications:', error);
+                    });
+            }
+        }
+
+        // Load initial data from Firebase or localStorage
+        function loadInitialData() {
+            // Load default players if none exist
+            const players = JSON.parse(localStorage.getItem('players') || '[]');
+            if (players.length === 0) {
+                const defaultPlayers = [
+                    {
+                        id: '1',
+                        name: 'محمد الأحمد',
+                        position: 'حارس مرمى',
+                        number: 1,
+                        code: 'hjiop',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'حارس مرمى موهوب ومتميز',
+                        joinDate: '2024-01-01',
+                        matches: 15,
+                        goals: 0
+                    },
+                    {
+                        id: '2',
+                        name: 'أحمد سالم',
+                        position: 'مدافع',
+                        number: 2,
+                        code: 'def123',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'مدافع قوي وصلب',
+                        joinDate: '2024-01-01',
+                        matches: 14,
+                        goals: 2
+                    },
+                    {
+                        id: '3',
+                        name: 'خالد محمد',
+                        position: 'مدافع',
+                        number: 3,
+                        code: 'def456',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'مدافع سريع ومتميز',
+                        joinDate: '2024-01-01',
+                        matches: 13,
+                        goals: 1
+                    },
+                    {
+                        id: '4',
+                        name: 'سعد العلي',
+                        position: 'وسط',
+                        number: 4,
+                        code: 'mid789',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'لاعب وسط مبدع ومتميز',
+                        joinDate: '2024-01-01',
+                        matches: 15,
+                        goals: 5
+                    },
+                    {
+                        id: '5',
+                        name: 'عمر حسن',
+                        position: 'مهاجم',
+                        number: 5,
+                        code: 'att101',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'مهاجم سريع وخطير',
+                        joinDate: '2024-01-01',
+                        matches: 14,
+                        goals: 8
+                    },
+                    {
+                        id: '6',
+                        name: 'يوسف أحمد',
+                        position: 'مهاجم',
+                        number: 6,
+                        code: 'att202',
+                        image: 'https://via.placeholder.com/150',
+                        description: 'مهاجم ماهر وذكي',
+                        joinDate: '2024-01-01',
+                        matches: 13,
+                        goals: 6
+                    }
+                ];
+                
+                localStorage.setItem('players', JSON.stringify(defaultPlayers));
+                
+                // Save to Firebase if available
+                if (window.db) {
+                    db.ref('players').set(defaultPlayers);
+                }
+            }
+            
+            // Load default posts if none exist
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            if (posts.length === 0) {
+                const defaultPosts = [
+                    {
+                        id: '1',
+                        author: 'محمد الأحمد',
+                        authorImage: 'https://via.placeholder.com/50',
+                        content: 'مرحباً بالجميع في فريق الذئاب الأسطوري! 🐺⚽',
+                        timestamp: new Date().toISOString(),
+                        likes: 5,
+                        comments: []
+                    },
+                    {
+                        id: '2',
+                        author: 'أحمد سالم',
+                        authorImage: 'https://via.placeholder.com/50',
+                        content: 'متحمس للمباراة القادمة! سنحقق النصر بإذن الله 💪',
+                        timestamp: new Date(Date.now() - 3600000).toISOString(),
+                        likes: 8,
+                        comments: []
+                    }
+                ];
+                
+                localStorage.setItem('posts', JSON.stringify(defaultPosts));
+                
+                // Save to Firebase if available
+                if (window.db) {
+                    db.ref('posts').set(defaultPosts);
+                }
+            }
+        }
+
+        // Send notification to all players
+        function sendNotificationToPlayers(title, body, data = {}) {
+            // Create notification object
+            const notification = {
+                id: Date.now().toString(),
+                title: title,
+                body: body,
+                data: data,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+            
+            // Save to localStorage
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            notifications.unshift(notification);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // Save to Firebase if available
+            if (window.db) {
+                db.ref('notifications').push(notification);
+            }
+            
+            // Show browser notification if permission granted
+            if (Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: '/icon.png',
+                    badge: '/icon.png',
+                    tag: notification.id
+                });
+            }
+            
+            // Send push notification via FCM (would require server-side implementation)
+            console.log('Notification sent:', notification);
+            
+            return notification;
+        }
+
+        // Firebase real-time listeners
+        function setupFirebaseListeners() {
+            if (!window.db) return;
+            
+            // Listen for new posts
+            db.ref('posts').on('value', (snapshot) => {
+                const posts = snapshot.val();
+                if (posts) {
+                    localStorage.setItem('posts', JSON.stringify(Object.values(posts)));
+                    // Reload posts if on posts tab
+                    if (document.querySelector('.nav-icon[data-tab="posts"]').classList.contains('active')) {
+                        loadPosts();
+                    }
+                }
+            });
+            
+            // Listen for new chat messages
+            db.ref('chatMessages').on('value', (snapshot) => {
+                const messages = snapshot.val();
+                if (messages) {
+                    localStorage.setItem('chatMessages', JSON.stringify(Object.values(messages)));
+                    // Reload chat if on chat tab
+                    if (document.querySelector('.nav-icon[data-tab="chat"]').classList.contains('active')) {
+                        loadChatMessages();
+                    }
+                }
+            });
+            
+            // Listen for player updates
+            db.ref('players').on('value', (snapshot) => {
+                const players = snapshot.val();
+                if (players) {
+                    localStorage.setItem('players', JSON.stringify(Object.values(players)));
+                    // Reload formation if on formation tab
+                    if (document.querySelector('.nav-icon[data-tab="formation"]').classList.contains('active')) {
+                        loadFormationData();
+                    }
+                }
+            });
+            
+            // Listen for match updates
+            db.ref('matches').on('value', (snapshot) => {
+                const matches = snapshot.val();
+                if (matches) {
+                    localStorage.setItem('matches', JSON.stringify(Object.values(matches)));
+                    // Reload next match info
+                    loadNextMatch();
+                }
+            });
+        }
+
+        // Enhanced createPost function with Firebase
+        function createPostWithFirebase() {
+            const postContent = document.getElementById('postContent').value.trim();
+            if (!postContent) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const newPost = {
+                id: Date.now().toString(),
+                author: currentUser.name || 'لاعب مجهول',
+                authorImage: currentUser.image || 'https://via.placeholder.com/50',
+                content: postContent,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                comments: []
+            };
+            
+            // Save to localStorage
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            posts.unshift(newPost);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            
+            // Save to Firebase
+            if (window.db) {
+                db.ref('posts').push(newPost);
+            }
+            
+            // Clear input
+            document.getElementById('postContent').value = '';
+            
+            // Reload posts
+            loadPosts();
+            
+            // Show success message
+            showNotification('تم نشر المنشور بنجاح!', 'success');
+        }
+
+        // Enhanced sendMessage function with Firebase
+        function sendMessageWithFirebase() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const newMessage = {
+                id: Date.now().toString(),
+                author: currentUser.name || 'لاعب مجهول',
+                authorImage: currentUser.image || 'https://via.placeholder.com/35',
+                text: messageText,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            messages.push(newMessage);
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+            
+            // Save to Firebase
+            if (window.db) {
+                db.ref('chatMessages').push(newMessage);
+            }
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Reload messages
+            loadChatMessages();
+        }
+
+        // Initialize player dashboard
+        function initializePlayerDashboard() {
+            // Set current user avatar
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userAvatar = document.getElementById('userAvatar');
+            if (userAvatar && currentUser.image) {
+                userAvatar.src = currentUser.image;
+            }
+            
+            // Initialize Firebase
+            initializeFirebase();
+            
+            // Setup Firebase listeners
+            setupFirebaseListeners();
+            
+            // Load default tab
+            showPlayerTab('formation');
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Firebase configuration
+            initializeFirebase();
+        });
+
+        // Initialize default data
+        async function initializeDefaultData() {
+            try {
+                // Check if players exist
+                const playersSnapshot = await get(ref(database, 'players'));
+                
+                if (!playersSnapshot.exists()) {
+                    // Add default players with codes
+                    const defaultPlayers = {
+                        player1: {
+                            name: 'محمد جمال',
+                            position: 'حارس مرمى',
+                            number: 1,
+                            code: 'hjiop',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'حارس مرمى موهوب ومتميز'
+                        },
+                        player2: {
+                            name: 'أحمد علي',
+                            position: 'مدافع',
+                            number: 4,
+                            code: 'def123',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'مدافع قوي وموثوق'
+                        },
+                        player3: {
+                            name: 'سعد محمد',
+                            position: 'مدافع',
+                            number: 5,
+                            code: 'def456',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'مدافع سريع ومهاري'
+                        },
+                        player4: {
+                            name: 'يوسف أحمد',
+                            position: 'وسط',
+                            number: 8,
+                            code: 'mid789',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'لاعب وسط مبدع'
+                        },
+                        player5: {
+                            name: 'عبدالله سعد',
+                            position: 'مهاجم',
+                            number: 9,
+                            code: 'att101',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'مهاجم هداف'
+                        },
+                        player6: {
+                            name: 'خالد يوسف',
+                            position: 'مهاجم',
+                            number: 10,
+                            code: 'att102',
+                            image: 'https://via.placeholder.com/150',
+                            description: 'مهاجم ماهر'
+                        }
+                    };
+                    
+                    await set(ref(database, 'players'), defaultPlayers);
+                }
+
+                // Set default team settings
+                const settingsSnapshot = await get(ref(database, 'settings'));
+                if (!settingsSnapshot.exists()) {
+                    await set(ref(database, 'settings'), {
+                        teamStatus: 'تدريب',
+                        formation: '2-1-2'
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error initializing default data:', error);
+            }
+        }
+
+        // Handle Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessCodeInput = document.getElementById('accessCode');
+            accessCodeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAccessCode();
+                }
+            });
+        });
+
+        // Make functions global
+        window.checkAccessCode = checkAccessCode;
+        window.showSection = showSection;
+
+        // Initialize app
+        initializeApp();
+    </script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</body>
+</html>
+
